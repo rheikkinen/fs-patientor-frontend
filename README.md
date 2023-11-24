@@ -1,5 +1,10 @@
-# Patientor frontend
+# Patientor Frontend
+
+### Backend
+
+The backend for the patientor app is found [here](https://github.com/rheikkinen/fs-typescript/tree/main/patientor).
 
 ### Getting started
-  - To get the app running just install its dependencies with ```npm install``` and run it with ```npm run dev```.
-  - The app should work without a backend, but make sure that the request made to ```/api/ping``` made on startup is successful before continuing.
+
+- To get the app running just install its dependencies with `npm install` and run it with `npm run dev`.
+- The app should work without a backend, but make sure that the request made to `/api/ping` made on startup is successful before continuing.
