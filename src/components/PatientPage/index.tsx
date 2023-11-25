@@ -1,7 +1,14 @@
 import { useParams } from 'react-router-dom';
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Card,
   CardContent,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
   Table,
   TableBody,
   TableCell,
@@ -11,6 +18,7 @@ import {
 import patientService from '../../services/patients';
 import { useEffect, useState } from 'react';
 import { Patient } from '../../types';
+import { ArrowRight, ExpandMore } from '@mui/icons-material';
 
 const PatientPage = () => {
   const { id } = useParams<string>();
@@ -31,10 +39,10 @@ const PatientPage = () => {
     <div className='App'>
       <Card variant='outlined' style={{ display: 'inline-block', padding: 5 }}>
         <CardContent>
-          <Typography align='center' variant='h6'>
+          <Typography align='center' variant='h5'>
             {patient.name}
           </Typography>
-          <Table style={{ width: 'auto' }}>
+          <Table style={{ width: 'auto', marginBottom: 10 }}>
             <TableBody>
               <TableRow>
                 <TableCell>SSN:</TableCell>
@@ -50,6 +58,35 @@ const PatientPage = () => {
               </TableRow>
             </TableBody>
           </Table>
+
+          <Typography align='center' variant='h6'>
+            Entries
+          </Typography>
+          {patient.entries.map((entry) => (
+            <Accordion key={entry.id}>
+              <AccordionSummary expandIcon={<ExpandMore />}>
+                <Typography sx={{ width: '33%', flexShrink: 0 }}>
+                  {entry.date}
+                </Typography>
+                <Typography sx={{ color: 'text.secondary' }}>
+                  {entry.description}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>Diagnose codes:</Typography>
+                <List dense={true}>
+                  {entry.diagnosisCodes?.map((code) => (
+                    <ListItem key={code}>
+                      <ListItemIcon>
+                        <ArrowRight />
+                      </ListItemIcon>
+                      <ListItemText primary={code} />
+                    </ListItem>
+                  ))}
+                </List>
+              </AccordionDetails>
+            </Accordion>
+          ))}
         </CardContent>
       </Card>
     </div>
