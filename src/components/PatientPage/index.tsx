@@ -17,10 +17,10 @@ import {
 } from '@mui/material';
 import patientService from '../../services/patients';
 import { useEffect, useState } from 'react';
-import { Patient } from '../../types';
+import { Diagnosis, Patient } from '../../types';
 import { ArrowRight, ExpandMore } from '@mui/icons-material';
 
-const PatientPage = () => {
+const PatientPage = ({ diagnoses }: { diagnoses: Diagnosis[] }) => {
   const { id } = useParams<string>();
   const [patient, setPatient] = useState<Patient | null>(null);
 
@@ -73,14 +73,17 @@ const PatientPage = () => {
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Typography>Diagnose codes:</Typography>
+                <Typography>Diagnoses:</Typography>
                 <List dense={true}>
                   {entry.diagnosisCodes?.map((code) => (
                     <ListItem key={code}>
                       <ListItemIcon>
                         <ArrowRight />
                       </ListItemIcon>
-                      <ListItemText primary={code} />
+                      <ListItemText
+                        primary={code}
+                        secondary={diagnoses.find((d) => d.code === code)?.name}
+                      />
                     </ListItem>
                   ))}
                 </List>
