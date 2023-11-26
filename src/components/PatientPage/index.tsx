@@ -1,14 +1,7 @@
 import { useParams } from 'react-router-dom';
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Card,
   CardContent,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
   Table,
   TableBody,
   TableCell,
@@ -18,7 +11,7 @@ import {
 import patientService from '../../services/patients';
 import { useEffect, useState } from 'react';
 import { Diagnosis, Patient } from '../../types';
-import { ArrowRight, ExpandMore } from '@mui/icons-material';
+import EntryList from './EntryList';
 
 const PatientPage = ({ diagnoses }: { diagnoses: Diagnosis[] }) => {
   const { id } = useParams<string>();
@@ -58,38 +51,7 @@ const PatientPage = ({ diagnoses }: { diagnoses: Diagnosis[] }) => {
               </TableRow>
             </TableBody>
           </Table>
-
-          <Typography align='center' variant='h6'>
-            Entries
-          </Typography>
-          {patient.entries.map((entry) => (
-            <Accordion key={entry.id}>
-              <AccordionSummary expandIcon={<ExpandMore />}>
-                <Typography sx={{ width: '33%', flexShrink: 0 }}>
-                  {entry.date}
-                </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>
-                  {entry.description}
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography>Diagnoses:</Typography>
-                <List dense={true}>
-                  {entry.diagnosisCodes?.map((code) => (
-                    <ListItem key={code}>
-                      <ListItemIcon>
-                        <ArrowRight />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={code}
-                        secondary={diagnoses.find((d) => d.code === code)?.name}
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              </AccordionDetails>
-            </Accordion>
-          ))}
+          <EntryList entries={patient.entries} diagnoses={diagnoses} />
         </CardContent>
       </Card>
     </div>
