@@ -68,4 +68,11 @@ export interface Patient {
   entries: Entry[];
 }
 
+// Define special omit for unions
+type UnionOmit<T, K extends string | number | symbol> = T extends unknown
+  ? Omit<T, K>
+  : never;
+
 export type PatientFormValues = Omit<Patient, 'id' | 'entries'>;
+
+export type EntryFormValues = UnionOmit<Entry, 'id'>;
