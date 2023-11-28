@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import {
+  Button,
   Card,
   CardContent,
   Table,
@@ -10,12 +11,24 @@ import {
 } from '@mui/material';
 import patientService from '../../services/patients';
 import { useEffect, useState } from 'react';
-import { Diagnosis, Patient } from '../../types';
+import { Diagnosis, EntryFormValues, Patient } from '../../types';
 import EntryList from './EntryList';
+import AddEntryModal from './AddEntryModal';
+import axios from 'axios';
+import entryService from '../../services/entries';
 
 const PatientPage = ({ diagnoses }: { diagnoses: Diagnosis[] }) => {
   const { id } = useParams<string>();
   const [patient, setPatient] = useState<Patient | null>(null);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [error, setError] = useState<string>();
+
+  const openModal = (): void => setModalOpen(true);
+
+  const closeModal = (): void => {
+    setModalOpen(false);
+    setError(undefined);
+  };
 
   useEffect(() => {
     const fetchPatient = async () => {
@@ -24,6 +37,31 @@ const PatientPage = ({ diagnoses }: { diagnoses: Diagnosis[] }) => {
     };
     void fetchPatient();
   }, [id]);
+
+  const submitNewEntry = async (values: EntryFormValues) => {
+    try {
+      if (patient === null) return;
+      const newEntry = await entryService.create(values, patient.id);
+      setPatient({ ...patient, entries: patient.entries.concat(newEntry) });
+      closeModal();
+    } catch (e: unknown) {
+      if (axios.isAxiosError(e)) {
+        if (
+          e?.response?.data?.error &&
+          typeof e?.response?.data.error === 'string'
+        ) {
+          const message = e.response.data.error;
+          console.error(message);
+          setError(message);
+        } else {
+          setError('Unrecognized axios error');
+        }
+      } else {
+        console.error('Unknown error', e);
+        setError('Unknown error');
+      }
+    }
+  };
 
   if (patient === null)
     return <div style={{ marginTop: 10 }}>Patient not found.</div>;
@@ -51,6 +89,15 @@ const PatientPage = ({ diagnoses }: { diagnoses: Diagnosis[] }) => {
               </TableRow>
             </TableBody>
           </Table>
+          <AddEntryModal
+            modalOpen={modalOpen}
+            onSubmit={submitNewEntry}
+            onClose={closeModal}
+            error={error}
+          />
+          <Button variant='contained' onClick={() => openModal()}>
+            Add a New Entry
+          </Button>
           <EntryList entries={patient.entries} diagnoses={diagnoses} />
         </CardContent>
       </Card>
