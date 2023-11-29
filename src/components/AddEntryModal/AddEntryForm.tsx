@@ -9,6 +9,7 @@ import {
 import { useState } from 'react';
 import { EntryFormValues, EntryType, Type } from '../../types';
 import EntryTypeSelector from './EntryTypeSelector';
+import DiagnosisCodeSelector from './DiagnosisCodeSelector';
 
 interface Props {
   onCancel: () => void;
@@ -18,7 +19,7 @@ interface Props {
 const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
   const [date, setDate] = useState('');
   const [description, setDescription] = useState('');
-  const [diagnosisCodes, setDiagnosisCodes] = useState<string>('');
+  const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([]);
   const [specialist, setSpecialist] = useState('');
   const [healthCheckRating, setHealthCheckRating] = useState('');
   const [employerName, setEmployerName] = useState('');
@@ -37,12 +38,16 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
     }
   };
 
+  const handleDiagnosisSelect = (event: SelectChangeEvent<string[]>) => {
+    const value = event.target.value;
+    setDiagnosisCodes(typeof value === 'string' ? value.split(',') : value);
+  };
+
   const getEntryDetails = () => {
-    const diagnosisCodesArray = diagnosisCodes.split(',');
     const baseDetails = {
       date,
       description,
-      diagnosisCodes: diagnosisCodesArray,
+      diagnosisCodes,
       specialist,
     };
     switch (entryType) {
@@ -181,11 +186,9 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
             value={specialist}
             onChange={({ target }) => setSpecialist(target.value)}
           />
-          <TextField
-            label='Diagnosis codes'
-            fullWidth
-            value={diagnosisCodes}
-            onChange={({ target }) => setDiagnosisCodes(target.value)}
+          <DiagnosisCodeSelector
+            onChange={handleDiagnosisSelect}
+            selectedCodes={diagnosisCodes}
           />
           {additionalFormFields()}
           <Grid>
