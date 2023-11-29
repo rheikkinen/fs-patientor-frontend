@@ -13,7 +13,7 @@ import patientService from '../../services/patients';
 import { useEffect, useState } from 'react';
 import { Diagnosis, EntryFormValues, Patient } from '../../types';
 import EntryList from './EntryList';
-import AddEntryModal from './AddEntryModal';
+import AddEntryModal from '../AddEntryModal';
 import axios from 'axios';
 import entryService from '../../services/entries';
 

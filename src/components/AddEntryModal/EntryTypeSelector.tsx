@@ -5,7 +5,7 @@ import {
   Select,
   SelectChangeEvent,
 } from '@mui/material';
-import { EntryType } from '../../../types';
+import { EntryType, Type } from '../../types';
 
 interface Props {
   selectedType: EntryType;
@@ -23,13 +23,11 @@ const EntryTypeSelector = ({ selectedType, onChange }: Props) => (
       label='Type of entry'
       onChange={onChange}
     >
-      <MenuItem value={EntryType.HealthCheck}>Health check</MenuItem>
-      <MenuItem value={EntryType.OccupationalHealthcare} disabled>
+      <MenuItem value={Type.HealthCheck}>Health check</MenuItem>
+      <MenuItem value={Type.OccupationalHealthcare}>
         Occupational healthcare
       </MenuItem>
-      <MenuItem value={EntryType.Hospital} disabled>
-        Hospital
-      </MenuItem>
+      <MenuItem value={Type.Hospital}>Hospital</MenuItem>
     </Select>
   </FormControl>
 );

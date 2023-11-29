@@ -16,10 +16,10 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material';
-import { Diagnosis, Entry, EntryType } from '../../../types';
+import { Diagnosis, Entry, Type } from '../../../types';
 import EntryDetails from './EntryDetails';
 
-const EntryList = ({
+const Entries = ({
   entries,
   diagnoses,
 }: {
@@ -28,11 +28,11 @@ const EntryList = ({
 }) => {
   const entryIcon = (entry: Entry) => {
     switch (entry.type) {
-      case EntryType.HealthCheck:
+      case Type.HealthCheck:
         return <FavoriteTwoTone />;
-      case EntryType.OccupationalHealthcare:
+      case Type.OccupationalHealthcare:
         return <WorkTwoTone />;
-      case EntryType.Hospital:
+      case Type.Hospital:
         return <LocalHospitalOutlined />;
       default:
         return null;
@@ -89,4 +89,4 @@ const EntryList = ({
   );
 };
 
-export default EntryList;
+export default Entries;

@@ -1,0 +1,213 @@
+import {
+  Box,
+  Button,
+  Grid,
+  SelectChangeEvent,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { useState } from 'react';
+import { EntryFormValues, EntryType, Type } from '../../types';
+import EntryTypeSelector from './EntryTypeSelector';
+
+interface Props {
+  onCancel: () => void;
+  onSubmit: (values: EntryFormValues) => void;
+}
+
+const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
+  const [date, setDate] = useState('');
+  const [description, setDescription] = useState('');
+  const [diagnosisCodes, setDiagnosisCodes] = useState<string>('');
+  const [specialist, setSpecialist] = useState('');
+  const [healthCheckRating, setHealthCheckRating] = useState('');
+  const [employerName, setEmployerName] = useState('');
+  const [sickLeaveStart, setSickLeaveStart] = useState('');
+  const [sickLeaveEnd, setSickLeaveEnd] = useState('');
+  const [dischargeDate, setDischargeDate] = useState('');
+  const [dischargeCriteria, setDischargeCriteria] = useState('');
+
+  const [entryType, setEntryType] = useState<EntryType>(Type.HealthCheck);
+
+  const handleEntryTypeChange = (event: SelectChangeEvent) => {
+    const value = event.target.value;
+    const type = Object.values(Type).find((t) => t.toString() === value);
+    if (type) {
+      setEntryType(type);
+    }
+  };
+
+  const getEntryDetails = () => {
+    const diagnosisCodesArray = diagnosisCodes.split(',');
+    const baseDetails = {
+      date,
+      description,
+      diagnosisCodes: diagnosisCodesArray,
+      specialist,
+    };
+    switch (entryType) {
+      case Type.HealthCheck:
+        return {
+          ...baseDetails,
+          type: Type.HealthCheck,
+          healthCheckRating,
+        };
+
+      case Type.OccupationalHealthcare:
+        return {
+          ...baseDetails,
+          type: Type.OccupationalHealthcare,
+          employerName,
+          sickLeave:
+            sickLeaveStart && sickLeaveEnd
+              ? {
+                  startDate: sickLeaveStart,
+                  endDate: sickLeaveEnd,
+                }
+              : null,
+        };
+      case Type.Hospital:
+        return {
+          ...baseDetails,
+          type: Type.Hospital,
+          discharge:
+            dischargeDate && dischargeCriteria
+              ? { date: dischargeDate, criteria: dischargeCriteria }
+              : null,
+        };
+      default:
+        throw new Error(`Invalid entry type: ${entryType}`);
+    }
+  };
+
+  const additionalFormFields = () => {
+    switch (entryType) {
+      case Type.HealthCheck:
+        return (
+          <TextField
+            label='Health check rating (0-3)'
+            fullWidth
+            value={healthCheckRating}
+            onChange={({ target }) => setHealthCheckRating(target.value)}
+          />
+        );
+      case Type.OccupationalHealthcare:
+        return (
+          <>
+            <TextField
+              label='Employer name'
+              fullWidth
+              value={employerName}
+              onChange={({ target }) => setEmployerName(target.value)}
+            />
+            <Typography>Sick leave:</Typography>
+            <Grid container item spacing='0.5em'>
+              <Grid item xs>
+                <TextField
+                  label='Start date'
+                  value={sickLeaveStart}
+                  onChange={({ target }) => setSickLeaveStart(target.value)}
+                />
+              </Grid>
+              <Grid item xs>
+                <TextField
+                  label='End date'
+                  value={sickLeaveEnd}
+                  onChange={({ target }) => setSickLeaveEnd(target.value)}
+                />
+              </Grid>
+            </Grid>
+          </>
+        );
+      case Type.Hospital:
+        return (
+          <>
+            <Typography>Discharge info:</Typography>
+            <TextField
+              label='Discharge date'
+              fullWidth
+              value={dischargeDate}
+              onChange={({ target }) => setDischargeDate(target.value)}
+            />
+            <TextField
+              label='Discharge criteria'
+              fullWidth
+              value={dischargeCriteria}
+              onChange={({ target }) => setDischargeCriteria(target.value)}
+            />
+          </>
+        );
+      default:
+        break;
+    }
+  };
+
+  const addEntry = (event: React.SyntheticEvent) => {
+    event.preventDefault();
+    const entryDetails = getEntryDetails();
+    onSubmit(entryDetails as EntryFormValues);
+  };
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.5em' }}>
+      <EntryTypeSelector
+        selectedType={entryType}
+        onChange={handleEntryTypeChange}
+      />
+      <form onSubmit={addEntry}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.5em' }}>
+          <TextField
+            label='Date'
+            fullWidth
+            value={date}
+            onChange={({ target }) => setDate(target.value)}
+          />
+          <TextField
+            label='Description'
+            fullWidth
+            value={description}
+            onChange={({ target }) => setDescription(target.value)}
+          />
+          <TextField
+            label='Specialist'
+            fullWidth
+            value={specialist}
+            onChange={({ target }) => setSpecialist(target.value)}
+          />
+          <TextField
+            label='Diagnosis codes'
+            fullWidth
+            value={diagnosisCodes}
+            onChange={({ target }) => setDiagnosisCodes(target.value)}
+          />
+          {additionalFormFields()}
+          <Grid>
+            <Grid item>
+              <Button
+                color='secondary'
+                variant='contained'
+                style={{ float: 'left' }}
+                type='button'
+                onClick={onCancel}
+              >
+                Cancel
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                style={{
+                  float: 'right',
+                }}
+                type='submit'
+                variant='contained'
+              >
+                Add
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
+      </form>
+    </Box>
+  );
+};
+
+export default AddEntryForm;

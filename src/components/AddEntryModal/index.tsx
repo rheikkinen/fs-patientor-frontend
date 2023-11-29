@@ -6,7 +6,7 @@ import {
   Alert,
 } from '@mui/material';
 import AddEntryForm from './AddEntryForm';
-import { EntryFormValues } from '../../../types';
+import { EntryFormValues } from '../../types';
 import { useEffect, useRef } from 'react';
 
 interface Props {
