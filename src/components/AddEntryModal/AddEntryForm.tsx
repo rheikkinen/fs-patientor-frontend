@@ -104,14 +104,18 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
             <Grid container item spacing='0.5em'>
               <Grid item xs>
                 <TextField
+                  type='date'
                   label='Start date'
+                  InputLabelProps={{ shrink: true }}
                   value={sickLeaveStart}
                   onChange={({ target }) => setSickLeaveStart(target.value)}
                 />
               </Grid>
               <Grid item xs>
                 <TextField
+                  type='date'
                   label='End date'
+                  InputLabelProps={{ shrink: true }}
                   value={sickLeaveEnd}
                   onChange={({ target }) => setSickLeaveEnd(target.value)}
                 />
@@ -124,7 +128,9 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
           <>
             <Typography>Discharge info:</Typography>
             <TextField
+              type='date'
               label='Discharge date'
+              InputLabelProps={{ shrink: true }}
               fullWidth
               value={dischargeDate}
               onChange={({ target }) => setDischargeDate(target.value)}
@@ -156,7 +162,9 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
       <form onSubmit={addEntry}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.5em' }}>
           <TextField
+            type='date'
             label='Date'
+            InputLabelProps={{ shrink: true }}
             fullWidth
             value={date}
             onChange={({ target }) => setDate(target.value)}
