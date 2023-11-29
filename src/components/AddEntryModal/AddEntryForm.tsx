@@ -7,9 +7,15 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import { EntryFormValues, EntryType, Type } from '../../types';
+import {
+  EntryFormValues,
+  EntryType,
+  HealthCheckRating,
+  Type,
+} from '../../types';
 import EntryTypeSelector from './EntryTypeSelector';
 import DiagnosisCodeSelector from './DiagnosisCodeSelector';
+import HealthRatingSelector from './HealthRatingSelector';
 
 interface Props {
   onCancel: () => void;
@@ -41,6 +47,16 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
   const handleDiagnosisSelect = (event: SelectChangeEvent<string[]>) => {
     const value = event.target.value;
     setDiagnosisCodes(typeof value === 'string' ? value.split(',') : value);
+  };
+
+  const handleHealthCheckRatingChange = (event: SelectChangeEvent) => {
+    const value = event.target.value;
+    const rating = Object.values(HealthCheckRating).find(
+      (rating) => rating === value
+    );
+    if (rating !== undefined) {
+      setHealthCheckRating(rating.toString());
+    }
   };
 
   const getEntryDetails = () => {
@@ -89,11 +105,9 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
     switch (entryType) {
       case Type.HealthCheck:
         return (
-          <TextField
-            label='Health check rating (0-3)'
-            fullWidth
-            value={healthCheckRating}
-            onChange={({ target }) => setHealthCheckRating(target.value)}
+          <HealthRatingSelector
+            rating={healthCheckRating}
+            onChange={handleHealthCheckRatingChange}
           />
         );
       case Type.OccupationalHealthcare:
