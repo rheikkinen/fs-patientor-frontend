@@ -43,48 +43,54 @@ const Entries = ({
       <Typography align='center' variant='h6'>
         Entries
       </Typography>
-      {entries.map((entry) => (
-        <Accordion key={entry.id}>
-          <AccordionSummary expandIcon={<ExpandMore />}>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  gap: '0.5em',
-                }}
-              >
-                {entryIcon(entry)}
-                <Typography sx={{ width: 'auto', flexShrink: 0 }}>
-                  {entry.date}
+      {!entries.length ? (
+        <Typography align='center'>
+          No entries found for this patient.
+        </Typography>
+      ) : (
+        entries.map((entry) => (
+          <Accordion key={entry.id}>
+            <AccordionSummary expandIcon={<ExpandMore />}>
+              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    gap: '0.5em',
+                  }}
+                >
+                  {entryIcon(entry)}
+                  <Typography sx={{ width: 'auto', flexShrink: 0 }}>
+                    {entry.date}
+                  </Typography>
+                </Box>
+                <Typography sx={{ color: 'text.secondary' }}>
+                  {entry.description}
                 </Typography>
               </Box>
-              <Typography sx={{ color: 'text.secondary' }}>
-                {entry.description}
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>Diagnosis by {entry.specialist}</Typography>
+              <Typography sx={{ fontWeight: 'bold' }}>
+                {entry.diagnosisCodes && 'Diagnoses:'}
               </Typography>
-            </Box>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>Diagnosis by {entry.specialist}</Typography>
-            <Typography sx={{ fontWeight: 'bold' }}>
-              {entry.diagnosisCodes && 'Diagnoses:'}
-            </Typography>
-            <List dense={true}>
-              {entry.diagnosisCodes?.map((code) => (
-                <ListItem key={code}>
-                  <ListItemIcon>
-                    <ArrowRight />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={code}
-                    secondary={diagnoses.find((d) => d.code === code)?.name}
-                  />
-                </ListItem>
-              ))}
-            </List>
-            <EntryDetails entry={entry} />
-          </AccordionDetails>
-        </Accordion>
-      ))}
+              <List dense={true}>
+                {entry.diagnosisCodes?.map((code) => (
+                  <ListItem key={code}>
+                    <ListItemIcon>
+                      <ArrowRight />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={code}
+                      secondary={diagnoses.find((d) => d.code === code)?.name}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+              <EntryDetails entry={entry} />
+            </AccordionDetails>
+          </Accordion>
+        ))
+      )}
     </Box>
   );
 };

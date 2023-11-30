@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import {
+  Box,
   Button,
   Card,
   CardContent,
@@ -73,6 +74,7 @@ const PatientPage = ({ diagnoses }: { diagnoses: Diagnosis[] }) => {
           <Typography align='center' variant='h5'>
             {patient.name}
           </Typography>
+
           <Table style={{ width: 'auto', marginBottom: 10 }}>
             <TableBody>
               <TableRow>
@@ -95,10 +97,16 @@ const PatientPage = ({ diagnoses }: { diagnoses: Diagnosis[] }) => {
             onClose={closeModal}
             error={error}
           />
-          <Button variant='contained' onClick={() => openModal()}>
-            Add a New Entry
-          </Button>
-          <EntryList entries={patient.entries} diagnoses={diagnoses} />
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.5em' }}>
+            <Button
+              sx={{ alignSelf: 'flex-start' }}
+              variant='contained'
+              onClick={() => openModal()}
+            >
+              Add a New Entry
+            </Button>
+            <EntryList entries={patient.entries} diagnoses={diagnoses} />
+          </Box>
         </CardContent>
       </Card>
     </div>
