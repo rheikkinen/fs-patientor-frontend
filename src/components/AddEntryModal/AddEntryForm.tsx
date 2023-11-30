@@ -39,7 +39,7 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
 
   const [entryType, setEntryType] = useState<EntryType>(Type.HealthCheck);
 
-  const handleEntryTypeChange = (event: SelectChangeEvent<EntryType>) => {
+  const handleEntryTypeChange = (event: SelectChangeEvent<string>) => {
     const value = event.target.value;
     const type = Object.values(Type).find((t) => t.toString() === value);
     if (type) {
@@ -48,10 +48,10 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
   };
 
   const handleDiagnosisSelect = (
-    event: SelectChangeEvent<Array<Diagnosis['code']>>
+    event: React.ChangeEvent<{ value: unknown }>
   ) => {
-    const value = event.target.value;
-    setDiagnosisCodes(typeof value === 'string' ? value.split(',') : value);
+    // TextField with select and multiple props returns an array
+    setDiagnosisCodes(event.target.value as Array<Diagnosis['code']>);
   };
 
   const handleHealthCheckRatingChange = (event: SelectChangeEvent<string>) => {
