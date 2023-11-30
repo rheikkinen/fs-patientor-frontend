@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import {
+  Diagnosis,
   EntryFormValues,
   EntryType,
   HealthCheckRating,
@@ -25,7 +26,9 @@ interface Props {
 const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
   const [date, setDate] = useState('');
   const [description, setDescription] = useState('');
-  const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([]);
+  const [diagnosisCodes, setDiagnosisCodes] = useState<
+    Array<Diagnosis['code']>
+  >([]);
   const [specialist, setSpecialist] = useState('');
   const [healthCheckRating, setHealthCheckRating] = useState('');
   const [employerName, setEmployerName] = useState('');
@@ -36,7 +39,7 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
 
   const [entryType, setEntryType] = useState<EntryType>(Type.HealthCheck);
 
-  const handleEntryTypeChange = (event: SelectChangeEvent) => {
+  const handleEntryTypeChange = (event: SelectChangeEvent<EntryType>) => {
     const value = event.target.value;
     const type = Object.values(Type).find((t) => t.toString() === value);
     if (type) {
@@ -44,12 +47,14 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
     }
   };
 
-  const handleDiagnosisSelect = (event: SelectChangeEvent<string[]>) => {
+  const handleDiagnosisSelect = (
+    event: SelectChangeEvent<Array<Diagnosis['code']>>
+  ) => {
     const value = event.target.value;
     setDiagnosisCodes(typeof value === 'string' ? value.split(',') : value);
   };
 
-  const handleHealthCheckRatingChange = (event: SelectChangeEvent) => {
+  const handleHealthCheckRatingChange = (event: SelectChangeEvent<string>) => {
     const value = event.target.value;
     const rating = Object.values(HealthCheckRating).find(
       (rating) => rating === value
@@ -125,6 +130,7 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
                 <TextField
                   type='date'
                   label='Start date'
+                  fullWidth
                   InputLabelProps={{ shrink: true }}
                   value={sickLeaveStart}
                   onChange={({ target }) => setSickLeaveStart(target.value)}
@@ -134,6 +140,7 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
                 <TextField
                   type='date'
                   label='End date'
+                  fullWidth
                   InputLabelProps={{ shrink: true }}
                   value={sickLeaveEnd}
                   onChange={({ target }) => setSickLeaveEnd(target.value)}
